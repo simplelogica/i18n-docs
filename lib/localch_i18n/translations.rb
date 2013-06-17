@@ -61,6 +61,8 @@ module LocalchI18n
 
     def download(url, destination_file)
       puts "Download '#{url}' to '#{destination_file}'"
+      FileUtils.mkdir_p File.dirname(destination_file)
+
       File.open(destination_file, 'wb') do |dst|
         doc = open(url).read
         dst.write(doc)
