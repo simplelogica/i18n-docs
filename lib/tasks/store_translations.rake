@@ -25,14 +25,15 @@ namespace :i18n do
   
   desc "Export all language files to CSV files (only files contained in en folder are considered)"
   task :export_translations => :environment do
-    raise "'Rails' not found! Tasks can only run within a Rails application!" if !defined?(Rails)
-    
-    source_dir  = Rails.root.join('config', 'locales')
-    output_dir  = Rails.root.join('tmp')
+
+    raise "'Rails' not found! Tasks can only run within a Rails application!" if !defined?(Rails) && ENV['translations_root']
+
     locales     = I18n.available_locales
     main_locale = ENV['main_locale'] || locales.first.to_s
+    source_dir  = ENV['translations_root'] || Rails.root.join('config', 'locales', main_locale)
+    output_dir  = ENV['translations_root'] ? "#{ENV['translations_root']}tmp" : Rails.root.join('tmp')
 
-    input_files = Dir[File.join(source_dir, main_locale, '**', '*.yml')]
+    input_files = Dir[File.join(source_dir, '**', '*.yml')]
 
     puts ""
     puts "  Detected locales: #{locales}"
