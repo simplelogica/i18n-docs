@@ -39,7 +39,7 @@ This defines which languages and translation files to import from a Google Sprea
 Following Rake tasks are added by the GEM to your Rails project:
 
 * `rake i18n:export_translations`
-  Export all language files to CSV files (only files contained in 'en' folder are considered)
+  Export all language files to CSV files. We can set the locale we want to extract the translations from with the `main_locale` option (e.g. `rake i18n:export_translations main_locale=es`)
 * `rake i18n:import_translations`
   Download translations from Google Spreadsheet and save them to YAML files.
 * `rake i18n:missing_keys`

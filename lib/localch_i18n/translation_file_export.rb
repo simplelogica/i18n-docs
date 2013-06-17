@@ -2,14 +2,14 @@ module LocalchI18n
   class TranslationFileExport
     
     attr_accessor :translations
-    
-    def initialize(source_dir, source_file, output_dir, locales)
+
+    def initialize(source_dir, source_file, output_dir, locales, main_locale = nil)
       @source_dir = source_dir
       @source_file = source_file
-
-      @output_file = File.join(output_dir, source_file.gsub('.yml', '.csv').gsub(/^.*locales\/#{locales.first}\//, '').gsub('/', '_'))
       @locales = locales.map {|l| l.to_s.downcase }
-      
+      @main_locale = main_locale || (@locales.include?('en') ? 'en' : @locales.first)
+      @output_file = File.join(output_dir, source_file.gsub('.yml', '.csv').gsub(/^.*locales\/#{@main_locale}\//, '').gsub('/', '_'))
+
       @translations = {}
     end
     
@@ -21,14 +21,13 @@ module LocalchI18n
     
     
     def write_to_csv
-      main_locale = @locales.include?('en') ? 'en' : @locales.first
-      
+
       puts "    #{@source_file}: write CSV to '#{@output_file}' \n\n"
       
       CSV.open(@output_file, "wb") do |csv|
         csv << (["key"] + @locales)
-        
-        @translations[main_locale].keys.each do |key|
+
+        @translations[@main_locale].keys.each do |key|
           values = @locales.map do |locale|
             @translations[locale][key]
           end
@@ -73,5 +72,5 @@ module LocalchI18n
     end
     
   end
-  
+
 end
