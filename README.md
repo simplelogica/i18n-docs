@@ -27,6 +27,10 @@ Create a configuration file in `config/translations.yml`:
       forms.yml: "https://docs.google.com/spreadsheet/pub?key=0Ap...XveWc&single=true&gid=0&output=csv"
       ... etc ...
 
+This config file can be created on Rails config folder or in other folder (e.g. if you are developing a gem) just setting the `config_root` parameter:
+
+    rake i18n:import_translations config_root=gem/config/
+
 Finally, let Rails know what locales you will be using. Add this to `config/application.rb`:
 
     # locals to support:

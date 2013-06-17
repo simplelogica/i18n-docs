@@ -9,13 +9,14 @@ namespace :i18n do
   
   desc "Download translations from Google Spreadsheet and save them to YAML files."
   task :import_translations => :environment do
-    raise "'Rails' not found! Tasks can only run within a Rails application!" if !defined?(Rails)
-    
-    config_file = Rails.root.join('config', 'translations.yml')
-    raise "No config file 'config/translations.yml' found." if !File.exists?(config_file)
-    
-    tmp_dir = Rails.root.join('tmp')
-    
+    raise "'Rails' not found! Tasks can only run within a Rails application!" if !defined?(Rails) && ENV['config_root'].nil?
+
+    config_root = ENV['config_root'] || Rails.root.join('config')
+    config_file = "#{config_root}translations.yml"
+    raise "No config file '#{config_file}' found." if !File.exists?(config_file)
+
+    tmp_dir = ENV['config_root'] ? "#{ENV['config_root']}tmp" : Rails.root.join('tmp')
+
     translations = LocalchI18n::Translations.new(config_file, tmp_dir)
     translations.download_files
     translations.store_translations
