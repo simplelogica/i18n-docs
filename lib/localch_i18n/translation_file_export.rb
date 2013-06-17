@@ -8,7 +8,7 @@ module LocalchI18n
       @source_file = source_file
       @locales = locales.map {|l| l.to_s.downcase }
       @main_locale = main_locale || (@locales.include?('en') ? 'en' : @locales.first)
-      @output_file = File.join(output_dir, source_file.gsub('.yml', '.csv').gsub(/^.*locales\/#{@main_locale}\//, '').gsub('/', '_'))
+      @output_file = File.join(output_dir, source_file.gsub('.yml', '.csv').gsub(source_dir, '').gsub('/', '_'))
 
       @translations = {}
     end
@@ -23,7 +23,8 @@ module LocalchI18n
     def write_to_csv
 
       puts "    #{@source_file}: write CSV to '#{@output_file}' \n\n"
-      
+
+      FileUtils.mkdir_p File.dirname(@output_file)
       CSV.open(@output_file, "wb") do |csv|
         csv << (["key"] + @locales)
 
