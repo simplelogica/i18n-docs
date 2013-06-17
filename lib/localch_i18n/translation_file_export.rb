@@ -67,7 +67,8 @@ module LocalchI18n
           # leaf -> store as value for key
           flat_hash[current_key.join('.')] = t
         end
-      end
+      end unless translations.nil?
+
       flat_hash
     end
     
