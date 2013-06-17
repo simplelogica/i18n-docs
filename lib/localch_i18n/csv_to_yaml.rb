@@ -4,11 +4,11 @@ module LocalchI18n
 
     attr_reader :input_file, :output_file, :locales, :translations
 
-    def initialize(input_file, output_file, locales = [])
+    def initialize(input_file, output_file, locales = [], config_path= nil)
       @input_file = input_file
-      @output_file = File.basename(output_file)
+      @output_file = output_file
       @locales = locales.map(&:to_s)
-
+      @config_path = config_path || (defined?(Rails) ? Rails.root.join('config', 'locales') : '')
       # init translation hash
       @translations = {}
       @locales.each do |locale|
@@ -19,12 +19,9 @@ module LocalchI18n
 
     def write_files
       @locales.each do |locale|
-        if defined?(Rails)
-          output_file_path = Rails.root.join('config', 'locales', locale, @output_file)
-          FileUtils.mkdir_p File.dirname(output_file_path)
-        else
-          output_file_path = "#{locale}_#{@output_file}"
-        end
+        output_file_path = "#{@config_path}/locales/#{locale}/#{@output_file}"
+        FileUtils.mkdir_p File.dirname(output_file_path)
+
         File.open(output_file_path, 'w') do |file|
           final_translation_hash = {locale => @translations[locale]}
           file.puts YAML::dump(final_translation_hash)
