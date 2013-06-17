@@ -6,8 +6,8 @@ module LocalchI18n
     def initialize(source_dir, source_file, output_dir, locales)
       @source_dir = source_dir
       @source_file = source_file
-      
-      @output_file = File.join(output_dir, source_file.gsub('.yml', '.csv'))
+
+      @output_file = File.join(output_dir, source_file.gsub('.yml', '.csv').gsub(/^.*locales\/#{locales.first}\//, '').gsub('/', '_'))
       @locales = locales.map {|l| l.to_s.downcase }
       
       @translations = {}
@@ -49,8 +49,8 @@ module LocalchI18n
     def load_language(locale)
       
       puts "    #{@source_file}: load translations for '#{locale}'"
-      
-      input_file = File.join(@source_dir, locale, @source_file)
+
+      input_file = @source_file
       translations = {}
       translations = YAML.load_file(input_file) if File.exists?(input_file)
       translations[locale]
