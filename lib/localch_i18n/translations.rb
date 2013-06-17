@@ -44,7 +44,7 @@ module LocalchI18n
 
     def store_translations
       @csv_files.each do |target_file, csv_file|
-        converter = CsvToYaml.new(csv_file, target_file, @locales)
+        converter = CsvToYaml.new(csv_file, target_file, @locales,File.dirname(@config_file))
         converter.process
         converter.write_files
       end
@@ -61,6 +61,8 @@ module LocalchI18n
 
     def download(url, destination_file)
       puts "Download '#{url}' to '#{destination_file}'"
+      FileUtils.mkdir_p File.dirname(destination_file)
+
       File.open(destination_file, 'wb') do |dst|
         doc = open(url).read
         dst.write(doc)
