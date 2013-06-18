@@ -35,7 +35,7 @@ module LocalchI18n
         #ensure .yml filename
         target_file = target_file + ".yml" if target_file !~ /\.yml$/
         # download file to tmp directory
-        tmp_file = File.basename(target_file).gsub('.yml', '.csv')
+        tmp_file = target_file.gsub('.yml', '.csv')
         tmp_file = File.join(@tmp_folder, tmp_file)
         download(url, tmp_file)
         @csv_files[target_file] = tmp_file
